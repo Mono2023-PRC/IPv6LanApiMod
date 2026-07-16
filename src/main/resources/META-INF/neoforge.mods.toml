@@ -22,6 +22,3 @@ type="required"
 versionRange="[1.21.1,1.22)"
 ordering="NONE"
 side="CLIENT"
-
-[[mixins]]
-config="mixins.ipv6lanapi.json"

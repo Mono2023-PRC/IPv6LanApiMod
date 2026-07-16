@@ -29,8 +29,4 @@ processResources {
     filesMatching('META-INF/neoforge.mods.toml') {
         expand 'version': project.version, 'mod_id': mod_id
     }
-    
-    filesMatching('mixins.ipv6lanapi.json') {
-        expand 'mod_id': mod_id
-    }
 }
