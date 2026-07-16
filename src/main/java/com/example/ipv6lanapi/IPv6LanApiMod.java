@@ -21,7 +21,7 @@ public class IPv6LanApiMod {
     private static IPv6Fetcher ipv6Fetcher;
 
     public IPv6LanApiMod(ModContainer container) {
-        container.registerConfig(ModConfig.Type.COMMON, ModConfig.CONFIG_SPEC);
+        container.registerConfig(ModConfig.Type.COMMON, IPv6LanApiConfig.CONFIG_SPEC);
         NeoForge.EVENT_BUS.register(this);
     }
 

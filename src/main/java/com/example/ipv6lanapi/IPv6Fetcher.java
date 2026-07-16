@@ -24,7 +24,7 @@ public class IPv6Fetcher {
     public void start() {
         fetchIp();
 
-        int intervalMinutes = ModConfig.CONFIG.fetchIntervalMinutes.get();
+        int intervalMinutes = IPv6LanApiConfig.CONFIG.fetchIntervalMinutes.get();
         scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "IPv6-Fetcher");
             t.setDaemon(true);

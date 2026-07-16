@@ -13,7 +13,7 @@ public class WebApiServer {
     private HttpServer server;
 
     public void start() {
-        int port = ModConfig.CONFIG.webApiPort.get();
+        int port = IPv6LanApiConfig.CONFIG.webApiPort.get();
         try {
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/", new IpHandler());

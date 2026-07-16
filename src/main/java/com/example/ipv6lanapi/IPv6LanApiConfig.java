@@ -2,21 +2,21 @@ package com.example.ipv6lanapi;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public class ModConfig {
+public class IPv6LanApiConfig {
     public static final ModConfigSpec CONFIG_SPEC;
-    public static final ModConfig CONFIG;
+    public static final IPv6LanApiConfig CONFIG;
 
     public final ModConfigSpec.IntValue webApiPort;
     public final ModConfigSpec.IntValue fetchIntervalMinutes;
 
     static {
         var pair = new ModConfigSpec.Builder()
-                .configure(ModConfig::new);
+                .configure(IPv6LanApiConfig::new);
         CONFIG = pair.getLeft();
         CONFIG_SPEC = pair.getRight();
     }
 
-    private ModConfig(ModConfigSpec.Builder builder) {
+    private IPv6LanApiConfig(ModConfigSpec.Builder builder) {
         builder.comment("IPv6 LAN API Configuration")
                 .push("server");
 
