@@ -1,7 +1,7 @@
 package com.example.ipv6lanapi.mixin;
 
 import com.example.ipv6lanapi.IPv6LanApiMod;
-import net.minecraft.client.server.IntegratedServer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Mixin;
