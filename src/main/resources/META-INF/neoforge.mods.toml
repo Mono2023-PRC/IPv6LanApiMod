@@ -22,3 +22,6 @@ type="required"
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="CLIENT"
+
+[[mixins]]
+config="mixins.ipv6lanapi.json"
