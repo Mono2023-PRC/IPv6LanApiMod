@@ -14,21 +14,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-sourceSets {
-    client {
-        java.srcDir 'src/client/java'
-    }
-}
-
 neoForge {
     version = "${neo_version}"
-    
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-            sourceSet(sourceSets.client)
-        }
-    }
 }
 
 tasks.withType(JavaCompile) {

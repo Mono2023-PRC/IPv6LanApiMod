@@ -4,9 +4,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
 
 @Mod(value = "ipv6lanapi", dist = Dist.CLIENT)
 public class IPv6LanApiMod {
@@ -19,7 +22,27 @@ public class IPv6LanApiMod {
         NeoForge.EVENT_BUS.register(this);
     }
 
-    public static void onLanOpened(int port) {
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        LOGGER.info("Server started, checking if it's a LAN server...");
+        
+        try {
+            Class<?> integratedServerClass = Class.forName("net.minecraft.server.integrated.IntegratedServer");
+            
+            if (integratedServerClass.isInstance(event.getServer())) {
+                Field lanPortField = integratedServerClass.getDeclaredField("lanPort");
+                lanPortField.setAccessible(true);
+                int port = lanPortField.getInt(event.getServer());
+                
+                LOGGER.info("LAN world detected on port {}", port);
+                startServices(port);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Failed to detect LAN server: {}", e.getMessage());
+        }
+    }
+
+    private void startServices(int port) {
         LOGGER.info("LAN world opened on port {}, starting IPv6 API service...", port);
 
         if (webServer == null) {
