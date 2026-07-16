@@ -1,25 +1,25 @@
 modLoader="javafml"
-loaderVersion="${loader_version_range}"
-license="${mod_license}"
+loaderVersion="[4,)"
+license="MIT"
 
 [[mods]]
 modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-description='''${mod_description}'''
-authors="${mod_authors}"
+version="${version}"
+displayName="IPv6 LAN API"
+description='''Expose public IPv6 address via Web API when LAN world is opened'''
+authors="Mono2023"
 
 [[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"
-versionRange="${neo_version_range}"
+versionRange="[21.1.0,)"
 ordering="NONE"
 side="CLIENT"
 
 [[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"
-versionRange="${minecraft_version_range}"
+versionRange="[1.21.1,1.22)"
 ordering="NONE"
 side="CLIENT"
 

@@ -1,70 +1,36 @@
 plugins {
-    id 'java-library'
-    id 'maven-publish'
     id 'net.neoforged.moddev' version '1.0.21'
 }
 
-version = mod_version
-group = mod_group_id
+version = "${mod_version}"
+group = "${mod_group_id}"
 
 base {
-    archivesName = mod_id
+    archivesName = "${mod_id}"
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 neoForge {
-    version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
-
-    runs {
-        client {
-            client()
-        }
-    }
-
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
-    }
+    version = "${neo_version}"
 }
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-}
-
-tasks.withType(ProcessResources).configureEach {
-    var replaceProperties = [
-        minecraft_version: minecraft_version,
-        minecraft_version_range: minecraft_version_range,
-        neo_version: neo_version,
-        neo_version_range: neo_version_range,
-        loader_version_range: loader_version_range,
-        mod_id: mod_id,
-        mod_name: mod_name,
-        mod_license: mod_license,
-        mod_version: mod_version,
-        mod_authors: mod_authors,
-        mod_description: mod_description
-    ]
-    inputs.properties replaceProperties
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
+tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mod_id', mod_id
+    
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand 'version': project.version, 'mod_id': mod_id
+    }
+    
+    filesMatching('mixins.ipv6lanapi.json') {
+        expand 'mod_id': mod_id
+    }
 }
