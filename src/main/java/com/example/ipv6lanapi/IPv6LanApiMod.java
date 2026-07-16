@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -124,6 +126,41 @@ public class IPv6LanApiMod {
         if (ipv6Fetcher == null) {
             ipv6Fetcher = new IPv6Fetcher();
             ipv6Fetcher.start();
+        }
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+            pingLanServer();
+        }, "IPv6-LAN-Pinger").start();
+    }
+
+    private void pingLanServer() {
+        String pingUrl = IPv6LanApiConfig.CONFIG.pingUrl.get();
+        LOGGER.info("Pinging LAN server at {}", pingUrl);
+        FileLogger.info("Pinging LAN server at " + pingUrl);
+
+        try {
+            URL url = new URL(pingUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(4000);
+            conn.setReadTimeout(4000);
+            conn.setRequestProperty("User-Agent", "IPv6-LAN-API/1.0");
+
+            int code = conn.getResponseCode();
+            if (code == 200) {
+                LOGGER.info("Network check succeeded (HTTP 200)");
+                FileLogger.info("Network check succeeded (HTTP 200)");
+            } else {
+                LOGGER.warn("Network check returned HTTP {}", code);
+                FileLogger.warn("Network check returned HTTP " + code);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Network check failed: {}", e.getMessage());
+            FileLogger.warn("Network check failed: " + e.getMessage());
         }
     }
 
