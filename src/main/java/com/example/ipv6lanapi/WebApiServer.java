@@ -10,19 +10,21 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public class WebApiServer {
-    private static final int PORT = 24016;
     private HttpServer server;
 
     public void start() {
+        int port = ModConfig.CONFIG.webApiPort.get();
         try {
-            server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/", new IpHandler());
             server.createContext("/ip", new IpHandler());
             server.setExecutor(null);
             server.start();
-            IPv6LanApiMod.LOGGER.info("Web API server started on http://0.0.0.0:{}", PORT);
+            IPv6LanApiMod.LOGGER.info("Web API server started on http://0.0.0.0:{}", port);
+            FileLogger.info("Web API server started on http://0.0.0.0:" + port);
         } catch (IOException e) {
-            IPv6LanApiMod.LOGGER.error("Failed to start Web API server on port {}", PORT, e);
+            IPv6LanApiMod.LOGGER.error("Failed to start Web API server on port {}", port, e);
+            FileLogger.error("Failed to start Web API server on port " + port, e);
         }
     }
 
@@ -30,6 +32,7 @@ public class WebApiServer {
         if (server != null) {
             server.stop(0);
             IPv6LanApiMod.LOGGER.info("Web API server stopped");
+            FileLogger.info("Web API server stopped");
         }
     }
 

@@ -24,12 +24,13 @@ public class IPv6Fetcher {
     public void start() {
         fetchIp();
 
+        int intervalMinutes = ModConfig.CONFIG.fetchIntervalMinutes.get();
         scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "IPv6-Fetcher");
             t.setDaemon(true);
             return t;
         });
-        scheduler.scheduleAtFixedRate(this::fetchIp, 30, 30, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::fetchIp, intervalMinutes, intervalMinutes, TimeUnit.MINUTES);
     }
 
     public void stop() {
@@ -43,6 +44,9 @@ public class IPv6Fetcher {
     }
 
     private void fetchIp() {
+        IPv6LanApiMod.LOGGER.info("Fetching IPv6 address...");
+        FileLogger.info("Fetching IPv6 address...");
+
         for (String apiUrl : API_URLS) {
             try {
                 URL url = new URL(apiUrl);
@@ -60,17 +64,23 @@ public class IPv6Fetcher {
                             String ip = json.get("ip").getAsString();
                             if (isValidIPv6(ip)) {
                                 currentIp = ip;
+                                String logMsg = "IPv6 address updated via " + apiUrl + ": " + ip;
                                 IPv6LanApiMod.LOGGER.info("IPv6 address updated via {}: {}", apiUrl, ip);
+                                FileLogger.info(logMsg);
                                 return;
                             }
                         }
                     }
                 }
             } catch (Exception e) {
+                String warnMsg = "IPv6 API failed " + apiUrl + ": " + e.getMessage();
                 IPv6LanApiMod.LOGGER.warn("IPv6 API failed {}: {}", apiUrl, e.getMessage());
+                FileLogger.warn(warnMsg);
             }
         }
+        String failMsg = "All IPv6 APIs failed. Keeping current IP: " + currentIp;
         IPv6LanApiMod.LOGGER.warn("All IPv6 APIs failed. Keeping current IP: {}", currentIp);
+        FileLogger.warn(failMsg);
     }
 
     private boolean isValidIPv6(String ip) {
